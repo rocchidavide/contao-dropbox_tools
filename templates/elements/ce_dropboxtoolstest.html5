@@ -1,0 +1,28 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+    <p>This is the ce_dropboxtoolstest.html5 template</p>
+
+    <?php if ($this->errors): ?>
+        <div style="border: 1px solid red; padding: 10px"><?= $this->errors ?></div>
+    <?php endif ?>
+
+    <?php Dump($this->metadata) ?>
+
+    <ul>
+        <?php
+        if ($this->filesInFolder)
+        {
+            foreach ($this->filesInFolder as $d)
+            { ?>
+                <li style="border: 1px solid #ccc; padding: 10px;">
+                    <img src="system/modules/dropbox-tools/assets/dropbox-api-icons/16x16/<?= $d['icon'] ?>.gif" alt="">
+                    <a href="<?= $d['download_link'] ?>"><?= $d['name'] ?> (<?= $d['size'] ?>)</a>
+                    <pre><?= print_r($d, true) ?></pre>
+                </li>
+            <?php }
+        } ?>
+    </ul>
+
+<?php $this->endblock(); ?>

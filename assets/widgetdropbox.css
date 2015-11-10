@@ -1,0 +1,30 @@
+.tl_dropbox_widget {
+	overflow: hidden;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+	.tl_dropbox_widget p {
+		display: block;
+		margin: 10px 0;
+	}
+
+#currentDropboxFile {
+	padding: 10px 0;
+}
+
+/*#dropboxSelectedFilesList {*/
+    /*padding: 10px 0;*/
+/*}*/
+    /*#dropboxSelectedFilesList li {*/
+        /*line-height: 18px;*/
+        /*margin-right: 9px;*/
+    /*}*/
+        /*#dropboxSelectedFilesList li img {*/
+            /*width: 18px;*/
+            /*height: auto;*/
+            /*vertical-align: middle;*/
+        /*}*/
+
+#dropboxBtnContainer {
+    padding: 10px 0;
+}

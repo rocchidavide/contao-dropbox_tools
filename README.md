@@ -1,2 +1,2 @@
-# contao-dropbox_tools
-Dropbox API and tools for the Contao CMS
+# contao-dropbox-tools
+Dropbox APIs and some tools
