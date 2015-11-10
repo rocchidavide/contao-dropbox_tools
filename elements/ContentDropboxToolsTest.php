@@ -38,18 +38,17 @@ class ContentDropboxToolsTest extends \ContentElement
             $accessToken = \Config::get('dropboxAccessToken');
             $dbxClient = new dbx\Client($accessToken, "PHP-Example/1.0");
 
-            //$sharedLink = $dbxClient->createShareableLink($pathFile);
-            //$sharedLink = $dbxClient->createTemporaryDirectLink($pathFile);
-
-            try {
+            try
+            {
                 $sharedLink = $dbxClient->createTemporaryDirectLink($pathFile);
+                //$sharedLink = $dbxClient->createShareableLink($pathFile);
             }
-            catch (dbx\Exception_BadRequest $ex) {
+            catch (dbx\Exception_BadRequest $ex)
+            {
                 print("Error loading <app-info-file>: ".$ex->getMessage()."\n");
-//                fwrite(STDERR, "Error loading <app-info-file>: ".$ex->getMessage()."\n");
+                // fwrite(STDERR, "Error loading <app-info-file>: ".$ex->getMessage()."\n");
                 die;
             }
-
 
             //Dump($sharedLink);
             $this->redirect($sharedLink[0]);
@@ -78,7 +77,6 @@ class ContentDropboxToolsTest extends \ContentElement
             $accessToken = \Config::get('dropboxAccessToken');
             $dbxClient = new \DropboxClient($accessToken, "PHP-Example/1.0");
 
-
             $pathError = dbx\Path::findError($this->dropboxPath);
             if ($pathError !== null)
             {
@@ -86,18 +84,15 @@ class ContentDropboxToolsTest extends \ContentElement
                 return;
             }
 
-            // =====================================================
+            // ============================
             // get metadata by path
-            // =====================================================
+            // ============================
             //$metadata = $dbxClient->getMetadataWithChildren(urldecode($this->dropboxPath));
 
-            // =====================================================
+            // ============================
             // get metadata by shared link
-            // =====================================================
-
-            // single file
+            // ============================
             $previewLink = 'https://www.dropbox.com/s/wq6u9zx1psa9nrh/2012-11-26%201%20Battesimo.pdf?dl=0';
-
             $metadata = $dbxClient->getMetadataSharedLink($previewLink);
 
             if ($metadata === null)
@@ -108,7 +103,8 @@ class ContentDropboxToolsTest extends \ContentElement
 
             // If it's a folder, remove the 'contents' list from $metadata; print that stuff out after.
             $children = null;
-            if ($metadata['is_dir']) {
+            if ($metadata['is_dir'])
+            {
                 $children = $metadata['contents'];
                 unset($metadata['contents']);
             }
@@ -119,9 +115,8 @@ class ContentDropboxToolsTest extends \ContentElement
             foreach ($children as $f)
             {
                 $name = dbx\Path::getName($f['path']);
-                if ($f['is_dir'])
-                    $name .= '/';  // Put a "/" after folder names.
-                $f['name'] = $name;
+                // Put a "/" after folder names.
+                $f['name'] = $name . ($f['is_dir'] ? '/' : '');
 
                 if ($f['is_dir'])
                     $f['download_link'] = '';
