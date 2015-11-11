@@ -44,15 +44,14 @@ class WidgetDropboxChooser extends \Widget
 	public function generate()
 	{
 		// Add stylesheet
-		$GLOBALS['TL_CSS']['dropboxChooserWidget'] = 'system/modules/dropbox-tools/assets/widgetdropbox.css';
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox-tools/assets/widgetdropbox.js';
+		$GLOBALS['TL_CSS'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.css';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.js';
 
 		return '
 			<div class="selector_container">'
 		       . (($this->varValue != '') ? '<p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '')
-		       . '<ul id="dropboxSelectedFilesList" class="zsortable"></ul>
-
-				<p><div id="dropboxBtnContainer"></div></p>
+		       . '<ul id="dropboxSelectedFilesList"></ul>
+				<div id="dropboxBtnContainer"></div>
 			</div>
 
 			<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $this->varValue . '">
@@ -68,33 +67,6 @@ class WidgetDropboxChooser extends \Widget
 					fileListContainerId: "dropboxSelectedFilesList",
 					storageFieldId: "ctrl_' . $this->strId . '"
 				});
-			</script>
-
-			<script type="text/javascript">
-//				var filesList = document.getElementById("ctrl_' . $this->strId . '");
-//
-//				if (filesList.value != "") {
-//					dropboxWidget.updateFilesList(JSON.parse(decodeURIComponent(filesList.value)));
-//				}
-//
-//				Sortable.create(document.getElementById("dropboxSelectedFilesList"), {
-//					onUpdate: function (evt/**Event*/){
-//				        var item = evt.item; // the current dragged HTMLElement
-//				        console.log(item);
-//					}
-//				});
-//
-//				var options = {
-//				    success: function(files) {
-//				    	dropboxWidget.updateFilesList(files);
-//				        filesList.value = encodeURIComponent(JSON.stringify(files));
-//				    },
-//				    linkType: "preview", // or "direct"
-//				    multiselect: true
-//				    //extensions: [".mp3",],
-//				};
-//				var button = Dropbox.createChooseButton(options);
-//				document.getElementById("dropboxBtnContainer").appendChild(button);
 			</script>
 		';
 	}
