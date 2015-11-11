@@ -17,7 +17,7 @@
             foreach ($this->filesInFolder as $d)
             { ?>
                 <li style="border: 1px solid #ccc; padding: 10px;">
-                    <img src="system/modules/dropbox-tools/assets/dropbox-api-icons/16x16/<?= $d['icon'] ?>.gif" alt="">
+                    <img src="system/modules/dropbox_tools/assets/dropbox-api-icons/16x16/<?= $d['icon'] ?>.gif" alt="">
                     <a href="<?= $d['download_link'] ?>"><?= $d['name'] ?> (<?= $d['size'] ?>)</a>
                     <pre><?= print_r($d, true) ?></pre>
                 </li>

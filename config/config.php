@@ -8,6 +8,12 @@
 	sectors it needs to be registered in.
 */
 
+/**
+ * Vendor versions
+ */
+define('DROPBOX_SDK_PHP', '1.1.5');
+define('SORTABLE', '1.4.2');
+
 
 /**
  * Back end form fields

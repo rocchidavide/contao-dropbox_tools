@@ -46,7 +46,7 @@ class WidgetDropboxChooser extends \Widget
 		// Add stylesheet
 		$GLOBALS['TL_CSS'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.css';
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.js';
-		$GLOBALS['TL_JAVASCRIPT'][] = 'http://rubaxa.github.io/Sortable/Sortable.js';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox_tools/vendor/sortable/Sortable.min.js';
 
 		return '
 			<div class="selector_container">'

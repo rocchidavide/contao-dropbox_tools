@@ -3,7 +3,7 @@
 namespace DropboxTools;
 
 # Include the Dropbox SDK libraries
-require_once TL_ROOT . '/system/modules/dropbox_tools/vendor/dropbox-sdk-php-1.1.5/lib/Dropbox/autoload.php';
+require_once TL_ROOT . '/system/modules/dropbox_tools/vendor/dropbox-sdk-php/lib/Dropbox/autoload.php';
 use \Dropbox as dbx;
 
 class DropboxClient extends dbx\Client
