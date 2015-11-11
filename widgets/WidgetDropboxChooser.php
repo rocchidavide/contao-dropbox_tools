@@ -46,6 +46,7 @@ class WidgetDropboxChooser extends \Widget
 		// Add stylesheet
 		$GLOBALS['TL_CSS'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.css';
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox_tools/assets/widgetdropbox.js';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'http://rubaxa.github.io/Sortable/Sortable.js';
 
 		return '
 			<div class="selector_container">'
@@ -56,7 +57,6 @@ class WidgetDropboxChooser extends \Widget
 
 			<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $this->varValue . '">
 
-			<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
 			<script	src="https://www.dropbox.com/static/api/2/dropins.js"
 					id="dropboxjs"
 					data-app-key="' . \Config::get('dropboxApiKey') . '"></script>
