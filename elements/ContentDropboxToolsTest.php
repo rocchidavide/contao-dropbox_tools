@@ -28,18 +28,38 @@ class ContentDropboxToolsTest extends \ContentElement
      */
     protected $strQsParam = 'file';
 
-
+	/*
+	 * il valore dell'argomento file cambierà se proveniente da un file da path o da chooser:
+	 * nel secondo caso
+	 * */
     public function generate()
     {
         $pathFile = \Input::get($this->strQsParam, true);
 
+	    $isPath = substr($pathFile, 0, 1) === '/';
+
         if ($pathFile != '')
         {
             $accessToken = \Config::get('dropboxAccessToken');
-            $dbxClient = new dbx\Client($accessToken, "PHP-Example/1.0");
+            $dbxClient = new \DropboxClient($accessToken, "PHP-Example/1.0");
 
             try
             {
+	            if (! $isPath)
+	            {
+		            $files = json_decode(urldecode($this->dropboxChooserFiles), true);
+
+		            foreach ($files as $f)
+		            {
+			            $basename = urldecode(explode('?', basename($f['link']))[0]);
+			            if ($basename == $pathFile)
+			            {
+				            $metadata = $dbxClient->getMetadataSharedLink($f['link']);
+				            $pathFile = $metadata['path'];
+			            }
+		            }
+	            }
+
                 $sharedLink = $dbxClient->createTemporaryDirectLink($pathFile);
                 //$sharedLink = $dbxClient->createShareableLink($pathFile);
             }
@@ -63,6 +83,7 @@ class ContentDropboxToolsTest extends \ContentElement
         if (TL_MODE == 'FE')
         {
             $strHref = \Environment::get('request');
+
             // Remove an existing file parameter (see #5683)
             if (preg_match('/(&(amp;)?|\?)' . $this->strQsParam . '=/', $strHref))
             {
@@ -77,57 +98,88 @@ class ContentDropboxToolsTest extends \ContentElement
             $accessToken = \Config::get('dropboxAccessToken');
             $dbxClient = new \DropboxClient($accessToken, "PHP-Example/1.0");
 
-            $pathError = dbx\Path::findError($this->dropboxPath);
-            if ($pathError !== null)
-            {
-                $this->Template->errors = "Invalid <dropbox-path>: $pathError";
-                return;
-            }
 
-            // ============================
-            // get metadata by path
-            // ============================
+	        // =========================================================================================================
+	        // get metadata by chooser
+	        // =========================================================================================================
+	        if ($this->dropboxChooserFiles !== '')
+	        {
+		        $children = json_decode(urldecode($this->dropboxChooserFiles), true);
+
+//		        foreach ($filesList as $f)
+//		        {
+//			        $f['path'] = $f['name'];
+//			        //$f['download_link'] = $dbxClient->createTemporaryDirectLink($f['link']);
+//		        }
+
+		        //$this->Template->filesInFolder = $filesList;
+	        }
+
+	        // $previewLink = 'https://www.dropbox.com/s/wq6u9zx1psa9nrh/2012-11-26%201%20Battesimo.pdf?dl=0';
+			// $metadata = $dbxClient->getMetadataSharedLink($previewLink);
+
+
+	        // =========================================================================================================
+	        // get metadata by path
+	        // =========================================================================================================
             //$metadata = $dbxClient->getMetadataWithChildren(urldecode($this->dropboxPath));
 
-            // ============================
-            // get metadata by shared link
-            // ============================
-            $previewLink = 'https://www.dropbox.com/s/wq6u9zx1psa9nrh/2012-11-26%201%20Battesimo.pdf?dl=0';
-            $metadata = $dbxClient->getMetadataSharedLink($previewLink);
+//            $pathError = dbx\Path::findError($this->dropboxPath);
+//            if ($pathError !== null)
+//            {
+//                $this->Template->errors = "Invalid <dropbox-path>: $pathError";
+//                return;
+//            }
 
-            if ($metadata === null)
-            {
-                $this->Template->errors = "No file or folder at that path.";
-                return;
-            }
+	        Dump($children);
 
-            // If it's a folder, remove the 'contents' list from $metadata; print that stuff out after.
-            $children = null;
-            if ($metadata['is_dir'])
-            {
-                $children = $metadata['contents'];
-                unset($metadata['contents']);
-            }
+	        if ($this->dropboxPath !== '')
+	        {
+		        if ($metadata === null)
+		        {
+			        $this->Template->errors = "No file or folder at that path.";
+			        return;
+		        }
 
-            $this->Template->metadata = $metadata;
+		        // If it's a folder, remove the 'contents' list from $metadata; print that stuff out after.
+		        $children = null;
+		        if ($metadata['is_dir'])
+		        {
+			        $children = $metadata['contents'];
+			        unset( $metadata['contents'] );
+		        }
 
-            $ff = array();
-            foreach ($children as $f)
-            {
-                $name = dbx\Path::getName($f['path']);
-                // Put a "/" after folder names.
-                $f['name'] = $name . ($f['is_dir'] ? '/' : '');
+		        $this->Template->metadata = $metadata;
+	        }
 
-                if ($f['is_dir'])
-                    $f['download_link'] = '';
-                else
-                    $f['download_link'] = $strDownloadBaseUrl . \System::urlEncode($f['path']);
+	        $ff = array();
+	        foreach ($children as $f)
+	        {
+		        if (array_key_exists('path', $f))
+		        {
+			        $name = dbx\Path::getName( $f['path'] );
+		        }
+		        else
+		        {
+			        $name = $f['name'];
+		        }
 
-                $ff[] = $f;
-            }
+		        // Put a "/" after folder names.
+		        $f['name'] = $name . ( $f['is_dir'] ? '/' : '' );
 
-            $this->Template->filesInFolder = $ff;
+		        if ( $f['is_dir'] )
+		        {
+			        $f['download_link'] = '';
+		        }
+		        else
+		        {
+			        $f['download_link'] = $strDownloadBaseUrl . \System::urlEncode($name);
+		        }
+
+		        $ff[] = $f;
+	        }
+
+	        $this->Template->filesInFolder = $ff;
         }
     }
 }
-
