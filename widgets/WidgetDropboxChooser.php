@@ -55,7 +55,7 @@ class WidgetDropboxChooser extends \Widget
 				<div id="dropboxBtnContainer"></div>
 			</div>
 
-			<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $this->varValue . '">
+			<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . htmlspecialchars($this->varValue) . '">
 
 			<script	src="https://www.dropbox.com/static/api/2/dropins.js"
 					id="dropboxjs"

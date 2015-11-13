@@ -34,6 +34,7 @@ class ContentDropboxToolsTest extends \ContentElement
 	 * */
     public function generate()
     {
+	    Dump($_POST);
         $pathFile = \Input::get($this->strQsParam, true);
 
 	    $isPath = substr($pathFile, 0, 1) === '/';
@@ -104,7 +105,7 @@ class ContentDropboxToolsTest extends \ContentElement
 	        // =========================================================================================================
 	        if ($this->dropboxChooserFiles !== '')
 	        {
-		        $children = json_decode(urldecode($this->dropboxChooserFiles), true);
+		        $children = json_decode($this->dropboxChooserFiles, true);
 
 //		        foreach ($filesList as $f)
 //		        {
@@ -180,6 +181,8 @@ class ContentDropboxToolsTest extends \ContentElement
 	        }
 
 	        $this->Template->filesInFolder = $ff;
+
+	        Dump($GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__']);
         }
     }
 }

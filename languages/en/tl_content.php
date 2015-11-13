@@ -11,4 +11,9 @@ $GLOBALS['TL_LANG']['tl_content']['dropboxChooserFiles'] = array('Dropbox Files'
 /**
  * Legends
  */
-$GLOBALS['TL_LANG']['tl_content']['dropbox_legend'] = 'Dropbox List';
+$GLOBALS['TL_LANG']['tl_content']['dropbox_legend'] = 'Dropbox Files';
+
+$GLOBALS['TL_LANG']['tl_content']['dropboxSources'] = array(
+	'path'      => 'path EN',
+	'chooser'   => 'chooser EN'
+);

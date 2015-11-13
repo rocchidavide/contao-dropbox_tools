@@ -34,7 +34,7 @@ var DropboxWidget = (function() {
     var buttonContainer;
     var storageField;
 
-    var formatBytes = function(bytes, decimals) {
+    var formatBytes = function (bytes, decimals) {
         if (bytes == 0) return '0 Byte';
         var k = 1000;
         var dm = decimals + 1 || 3;
@@ -43,7 +43,7 @@ var DropboxWidget = (function() {
         return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
     };
 
-    var renderFileList = function(f) {
+    var renderFileList = function (f) {
         console.log('renderFileList: files arg', f);
 
         var ul = fileListContainer;
@@ -87,8 +87,10 @@ var DropboxWidget = (function() {
         }
     };
 
-    var updateSorting = function(oldPos, newPos) {
+    var updateSorting = function (oldPos, newPos) {
         var oldId, newId;
+
+        console.log('updateSorting:dbxFiles ', dbxFiles);
 
         for (var i = 0; i < dbxFiles.length; i++) {
 
@@ -103,18 +105,18 @@ var DropboxWidget = (function() {
         dbxFiles[ oldId ].sortIdx = newPos;
         dbxFiles[ newId ].sortIdx = oldPos;
 
-        console.log('updateSorting:dbxFiles BEFORE', dbxFiles);
-
+        //console.log('updateSorting:dbxFiles BEFORE', dbxFiles);
+        //
         dbxFiles = dbxFiles.sortBy('sortIdx');
-        console.log('updateSorting:dbxFiles AFTER', dbxFiles);
+        //console.log('updateSorting:dbxFiles AFTER', dbxFiles);
     };
 
-    var storeFiles = function() {
-        storageField.value = encodeURIComponent(JSON.stringify(dbxFiles));
+    var storeFiles = function () {
+        storageField.setAttribute('value', JSON.stringify(dbxFiles));
     };
 
     return {
-        init: function(options) {
+        init: function (options) {
 
             console.log('DropboxWidget init');
 
@@ -137,7 +139,8 @@ var DropboxWidget = (function() {
             // load current saved files list
             storageField = document.getElementById(config.storageFieldId);
             if (storageField.value != "") {
-                renderFileList(JSON.parse(decodeURIComponent(storageField.value)));
+                dbxFiles = JSON.parse(storageField.value);
+                renderFileList();
             }
 
             // sortable init
@@ -158,7 +161,7 @@ var DropboxWidget = (function() {
     }
 })();
 
-Array.prototype.sortBy = function(p) {
+Array.prototype.sortBy = function (p) {
     return this.slice(0).sort(function(a, b) {
         return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
     });
