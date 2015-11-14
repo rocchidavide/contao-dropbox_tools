@@ -1,5 +1,7 @@
 var DropboxWidget = (function() {
 
+    'use strict';
+
     var config = {
         buttonContainerId: "dropboxBtnContainer",
         fileListContainerId: "dropboxSelectedFilesList",
@@ -25,6 +27,10 @@ var DropboxWidget = (function() {
             linkType: "preview", // or "direct"
             multiselect: true
             //extensions: [".mp3",],
+        },
+
+        sortable: {
+            dataIdAttr: 'data-position'
         }
     };
 
@@ -58,31 +64,23 @@ var DropboxWidget = (function() {
         for (var i = 0; i < files.length; i++) {
 
             var li = document.createElement("li");
-            li.setAttribute('data-position', files[i].sortIdx);
-            //var a = document.createElement('a');
+            li.setAttribute(config.sortable.dataIdAttr, files[i].sortIdx);
 
             var icon = document.createElement('img');
-            icon.setAttribute('src', files[i].icon);
-            icon.setAttribute('width', '16');
-            icon.setAttribute('height', '16');
+            icon.src = files[i].icon;
+            icon.width = '16';
+            icon.height = '16';
+            li.appendChild(icon);
 
-            var aText = document.createTextNode(files[i].name);
+            var liText = document.createTextNode(files[i].name);
+            li.appendChild(liText);
 
             var span = document.createElement('span');
             span.className = 'tl_gray';
             var txtfileSize = document.createTextNode(' (' + formatBytes(files[i].bytes) + ')');
             span.appendChild(txtfileSize);
-
-            li.appendChild(icon);
-            li.appendChild(aText);
             li.appendChild(span);
 
-            //a.appendChild(icon);
-            //a.appendChild(aText);
-            //a.setAttribute('target', '_blank');
-            //a.href = files[i].link;
-
-            //li.appendChild(a);
             ul.appendChild(li);
         }
     };
@@ -105,14 +103,11 @@ var DropboxWidget = (function() {
         dbxFiles[ oldId ].sortIdx = newPos;
         dbxFiles[ newId ].sortIdx = oldPos;
 
-        //console.log('updateSorting:dbxFiles BEFORE', dbxFiles);
-        //
         dbxFiles = dbxFiles.sortBy('sortIdx');
-        //console.log('updateSorting:dbxFiles AFTER', dbxFiles);
     };
 
     var storeFiles = function () {
-        storageField.setAttribute('value', JSON.stringify(dbxFiles));
+        storageField.value = JSON.stringify(dbxFiles);
     };
 
     return {
@@ -120,14 +115,7 @@ var DropboxWidget = (function() {
 
             console.log('DropboxWidget init');
 
-            // TODO deep extend
-            function extend(a, b) {
-                var c = {};
-                for(var p in a)
-                    c[p] = (b[p] == null) ? a[p] : b[p];
-                return c;
-            }
-            config = extend(config, options);
+            deepExtend(config, options);
 
             // build dropbox button
             var button = Dropbox.createChooseButton(config.dbxOptions);
@@ -145,7 +133,7 @@ var DropboxWidget = (function() {
 
             // sortable init
             Sortable.create(fileListContainer, {
-                dataIdAttr: 'data-position',
+                dataIdAttr: config.sortable.dataIdAttr,
                 onEnd: function (evt) {
                     console.log('old position', evt.oldIndex);
                     console.log('new position', evt.newIndex);
@@ -153,7 +141,6 @@ var DropboxWidget = (function() {
                     updateSorting(evt.oldIndex, evt.newIndex);
 
                     storeFiles();
-
                     renderFileList();
                 }
             });
@@ -166,3 +153,25 @@ Array.prototype.sortBy = function (p) {
         return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
     });
 }
+
+var deepExtend = function(out) {
+    out = out || {};
+
+    for (var i = 1; i < arguments.length; i++) {
+        var obj = arguments[i];
+
+        if (!obj)
+            continue;
+
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (typeof obj[key] === 'object')
+                    deepExtend(out[key], obj[key]);
+                else
+                    out[key] = obj[key];
+            }
+        }
+    }
+
+    return out;
+};

@@ -28,3 +28,7 @@
 #dropboxBtnContainer {
     padding: 10px 0;
 }
+
+#dropboxSelectedFilesList li {
+    cursor: move;
+}
