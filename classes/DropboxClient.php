@@ -39,26 +39,21 @@ class DropboxClient extends dbx\Client
 
     function getMetadataSharedLink($path)
     {
-        $params = array(
+        $response = $this->doGet($this->myApiHost, "1/metadata/link", array(
             "link" => $path
-        );
+        ));
 
-        $response = $this->doGet(
-            $this->myApiHost,
-            "1/metadata/link",
-            $params);
+        if ($response->statusCode === 404)
+            return null;
 
-        if ($response->statusCode === 404) return null;
-        if ($response->statusCode !== 200) throw dbx\RequestUtil::unexpectedStatus($response);
+        if ($response->statusCode !== 200)
+            throw dbx\RequestUtil::unexpectedStatus($response);
 
         $metadata = dbx\RequestUtil::parseResponseJson($response->body);
-        if (array_key_exists("is_deleted", $metadata) && $metadata["is_deleted"]) return null;
-        return $metadata;
+        if (array_key_exists("is_deleted", $metadata) && $metadata["is_deleted"])
+            return null;
 
-//        return $this->_getMetadata('/link', array(
-//            "list" => "true",
-//            "link" => $path
-//        ));
+        return $metadata;
     }
 
     public static function getClient($accessToken)
