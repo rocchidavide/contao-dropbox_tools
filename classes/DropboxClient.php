@@ -60,4 +60,11 @@ class DropboxClient extends dbx\Client
 //            "link" => $path
 //        ));
     }
+
+    public static function getClient($accessToken)
+    {
+        //$accessToken = \Config::get('dropboxAccessToken');
+        $dbxClient = new \DropboxClient($accessToken, "PHP-Example/1.0");
+        return $dbxClient;
+    }
 }

@@ -1,13 +1,12 @@
 <?php
 
 /**
- * widget_hours extension for Contao Open Source CMS
+ * Dropbox tools extension for Contao Open Source CMS
  *
  * Copyright (C) 2015 Davide Rocchi
  *
- * @package widget_hours
- * @author  Codefog <http://codefog.pl>
- * @author  Kamil Kuzminski <kamil.kuzminski@codefog.pl>
+ * @package dropbox_tools
+ * @author  Davide Rocchi <http://www.daviderocchi.it>
  * @license LGPL
  */
 
@@ -25,7 +24,7 @@ class WidgetDropboxChooser extends \Widget
 	/**
 	 * Submit user input
 	 * @var boolean
-	 * se lo commento, non salva: chiedere a Kamil
+	 * TOUNDERSTAND: if I comment it, it doesn't save.
 	 */
 	protected $blnSubmitInput = true;
 
@@ -49,17 +48,20 @@ class WidgetDropboxChooser extends \Widget
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/dropbox_tools/vendor/sortable/Sortable.min.js';
 
 		return '
-			<div class="selector_container">'
-		       . (($this->varValue != '') ? '<p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '')
-		       . '<ul id="dropboxSelectedFilesList"></ul>
-				<div id="dropboxBtnContainer"></div>
+			<div class="selector_container">
+		        <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>
+		        <ul id="dropboxSelectedFilesList"></ul>
+			    <div id="dropboxBtnContainer"></div>
 			</div>
 
-			<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . str_replace('"', '&quot;', $this->varValue) . '">
+			<input type="hidden"
+			    id="ctrl_' . $this->strId . '"
+			    name="' . $this->strName . '"
+			    value="' . str_replace('"', '&quot;', $this->varValue) . '">
 
 			<script	src="https://www.dropbox.com/static/api/2/dropins.js"
-					id="dropboxjs"
-					data-app-key="' . \Config::get('dropboxApiKey') . '"></script>
+			    id="dropboxjs"
+		    	data-app-key="' . \Config::get('dropboxApiKey') . '"></script>
 
 			<script type="text/javascript">
 				DropboxWidget.init({

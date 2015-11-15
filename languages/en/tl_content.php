@@ -4,8 +4,9 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_content']['dropboxPath'] = array('Dropbox Path', 'Take it from Dropbox url');
-$GLOBALS['TL_LANG']['tl_content']['dropboxChooserFiles'] = array('Dropbox Files', 'From chooser widget');
+$GLOBALS['TL_LANG']['tl_content']['dropboxSource'] 			= array('Dropbox selection method', 'Choose how to select dropbox files');
+$GLOBALS['TL_LANG']['tl_content']['dropboxPath'] 			= array('Dropbox Path', 'Get it from Dropbox url');
+$GLOBALS['TL_LANG']['tl_content']['dropboxChooserFiles']	= array('Dropbox Files', 'Use the Chooser component to select your files');
 
 
 /**
@@ -14,6 +15,6 @@ $GLOBALS['TL_LANG']['tl_content']['dropboxChooserFiles'] = array('Dropbox Files'
 $GLOBALS['TL_LANG']['tl_content']['dropbox_legend'] = 'Dropbox Files';
 
 $GLOBALS['TL_LANG']['tl_content']['dropboxSources'] = array(
-	'path'      => 'path EN',
-	'chooser'   => 'chooser EN'
+	'path'      => 'by path',
+	'chooser'   => 'by Chooser'
 );

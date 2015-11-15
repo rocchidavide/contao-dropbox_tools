@@ -16,6 +16,7 @@
 */
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] =  'dropboxSource';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['dropboxDownloads'] = '{type_legend},type,headline;{dropbox_legend},dropboxSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop';
 $GLOBALS['TL_DCA']['tl_content']['palettes']['dropboxTools'] = '{type_legend},type,headline;{dropbox_legend},dropboxSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop';
 
 $GLOBALS['TL_DCA']['tl_content']['subpalettes']['dropboxSource_path'] = 'dropboxPath';
@@ -28,11 +29,11 @@ $GLOBALS['TL_DCA']['tl_content']['subpalettes']['dropboxSource_chooser'] = 'drop
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['dropboxSource'] = array
 (
-	'label'         => array('Seleziona sorgente dropbox', ''),
+	'label'         => &$GLOBALS['TL_LANG']['tl_content']['dropboxSource'],
 	'default'       => 'chooser',
 	'inputType'     => 'radio',
 	'options'       => array('path', 'chooser'),
-	//'reference'     => &$GLOBALS['TL_LANG']['tl_content']['dropboxSources'],
+	'reference'     => &$GLOBALS['TL_LANG']['tl_content']['dropboxSources'],
 	'eval'          => array('mandatory'=>true, 'submitOnChange'=>true),
 	'sql'           => "varchar(32) NOT NULL default ''"
 );

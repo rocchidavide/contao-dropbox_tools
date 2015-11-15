@@ -29,6 +29,7 @@ ClassLoader::addClasses(array
 	'DropboxTools\WidgetDropboxChooser' 	=> 'system/modules/dropbox_tools/widgets/WidgetDropboxChooser.php',
 
 	// Elements
+	'DropboxTools\ContentDropboxDownloads'	=> 'system/modules/dropbox_tools/elements/ContentDropboxDownloads.php',
 	'DropboxTools\ContentDropboxToolsTest'	=> 'system/modules/dropbox_tools/elements/ContentDropboxToolsTest.php',
 ));
 
@@ -39,5 +40,6 @@ ClassLoader::addClasses(array
 TemplateLoader::addFiles(array
 (
 	// Elements
+    'ce_dropbox_downloads'	=> 'system/modules/dropbox_tools/templates/elements',
 	'ce_dropboxtoolstest'	=> 'system/modules/dropbox_tools/templates/elements',
 ));

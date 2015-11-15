@@ -1,17 +1,21 @@
 <?php
 
+/**
+ * Dropbox tools extension for Contao Open Source CMS
+ *
+ * Copyright (C) 2015 Davide Rocchi
+ *
+ * @package dropbox_tools
+ * @author  Davide Rocchi <http://www.daviderocchi.it>
+ * @license LGPL
+ */
+
 namespace DropboxTools;
 
 # Include the Dropbox SDK libraries
 require_once TL_ROOT . '/system/modules/dropbox_tools/vendor/dropbox-sdk-php/lib/Dropbox/autoload.php';
 use \Dropbox as dbx;
 
-/**
- * Class ContentDropboxToolsTest
- *
- * @copyright  Davide Rocchi 2015
- * @author     Davide Rocchi <http://www.daviderocchi.it>
- */
 
 class ContentDropboxToolsTest extends \ContentElement
 {

@@ -6,6 +6,7 @@ var DropboxWidget = (function() {
         buttonContainerId: "dropboxBtnContainer",
         fileListContainerId: "dropboxSelectedFilesList",
         storageFieldId: '', // form hidden field where to store files
+        hintClassName: 'sort_hint',
 
         dbxOptions: {
             success: function(files) {
@@ -20,6 +21,7 @@ var DropboxWidget = (function() {
                 }
 
                 renderFileList();
+                toggleHint();
 
                 // store files in hidden field immediately
                 storeFiles();
@@ -35,19 +37,10 @@ var DropboxWidget = (function() {
     };
 
     var dbxFiles = [];
-
+    var hint;
     var fileListContainer;
     var buttonContainer;
     var storageField;
-
-    var formatBytes = function (bytes, decimals) {
-        if (bytes == 0) return '0 Byte';
-        var k = 1000;
-        var dm = decimals + 1 || 3;
-        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        var i = Math.floor(Math.log(bytes) / Math.log(k));
-        return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
-    };
 
     var renderFileList = function (f) {
         console.log('renderFileList: files arg', f);
@@ -64,7 +57,7 @@ var DropboxWidget = (function() {
         for (var i = 0; i < files.length; i++) {
 
             var li = document.createElement("li");
-            li.setAttribute(config.sortable.dataIdAttr, files[i].sortIdx);
+            //li.setAttribute(config.sortable.dataIdAttr, files[i].sortIdx);
 
             var icon = document.createElement('img');
             icon.src = files[i].icon;
@@ -85,29 +78,64 @@ var DropboxWidget = (function() {
         }
     };
 
-    var updateSorting = function (oldPos, newPos) {
-        var oldId, newId;
-
-        console.log('updateSorting:dbxFiles ', dbxFiles);
-
-        for (var i = 0; i < dbxFiles.length; i++) {
-
-            if (dbxFiles[i].sortIdx == oldPos) {
-                oldId = i;
-            }
-            else if (dbxFiles[i].sortIdx == newPos) {
-                newId = i;
-            }
-        }
-
-        dbxFiles[ oldId ].sortIdx = newPos;
-        dbxFiles[ newId ].sortIdx = oldPos;
-
-        dbxFiles = dbxFiles.sortBy('sortIdx');
-    };
+    //var updateSorting = function (oldPos, newPos) {
+    //    var oldId, newId;
+    //
+    //    console.log('updateSorting:dbxFiles ', dbxFiles);
+    //
+    //    for (var i = 0; i < dbxFiles.length; i++) {
+    //
+    //        if (dbxFiles[i].sortIdx == oldPos) {
+    //            oldId = i;
+    //        }
+    //        else if (dbxFiles[i].sortIdx == newPos) {
+    //            newId = i;
+    //        }
+    //    }
+    //
+    //    dbxFiles[ oldId ].sortIdx = newPos;
+    //    dbxFiles[ newId ].sortIdx = oldPos;
+    //
+    //    dbxFiles = dbxFiles.sortBy('sortIdx');
+    //};
 
     var storeFiles = function () {
         storageField.value = JSON.stringify(dbxFiles);
+    };
+
+    var formatBytes = function (bytes, decimals) {
+        if (bytes == 0) return '0 Byte';
+        var k = 1000;
+        var dm = decimals + 1 || 3;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+    };
+
+    var toggleHint = function () {
+        hint.style.visibility = dbxFiles.length <= 1 ? 'hidden' : 'visible';
+    };
+
+    var deepExtend = function (out) {
+        out = out || {};
+
+        for (var i = 1; i < arguments.length; i++) {
+            var obj = arguments[i];
+
+            if (!obj)
+                continue;
+
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if (typeof obj[key] === 'object')
+                        deepExtend(out[key], obj[key]);
+                    else
+                        out[key] = obj[key];
+                }
+            }
+        }
+
+        return out;
     };
 
     return {
@@ -131,14 +159,16 @@ var DropboxWidget = (function() {
                 renderFileList();
             }
 
+            hint = document.getElementsByClassName(config.hintClassName)[0];
+            toggleHint();
+
             // sortable init
             Sortable.create(fileListContainer, {
                 dataIdAttr: config.sortable.dataIdAttr,
                 onEnd: function (evt) {
-                    console.log('old position', evt.oldIndex);
-                    console.log('new position', evt.newIndex);
+                    dbxFiles.move(evt.oldIndex, evt.newIndex);
 
-                    updateSorting(evt.oldIndex, evt.newIndex);
+                    //updateSorting(evt.oldIndex, evt.newIndex);
 
                     storeFiles();
                     renderFileList();
@@ -148,30 +178,18 @@ var DropboxWidget = (function() {
     }
 })();
 
-Array.prototype.sortBy = function (p) {
-    return this.slice(0).sort(function(a, b) {
-        return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
-    });
-}
+//Array.prototype.sortBy = function (p) {
+//    return this.slice(0).sort(function(a, b) {
+//        return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
+//    });
+//}
 
-var deepExtend = function(out) {
-    out = out || {};
-
-    for (var i = 1; i < arguments.length; i++) {
-        var obj = arguments[i];
-
-        if (!obj)
-            continue;
-
-        for (var key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if (typeof obj[key] === 'object')
-                    deepExtend(out[key], obj[key]);
-                else
-                    out[key] = obj[key];
-            }
+Array.prototype.move = function (old_index, new_index) {
+    if (new_index >= this.length) {
+        var k = new_index - this.length;
+        while ((k--) + 1) {
+            this.push(undefined);
         }
     }
-
-    return out;
+    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
 };
