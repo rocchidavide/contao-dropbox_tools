@@ -16,9 +16,9 @@ var DropboxWidget = (function() {
                 dbxFiles = files;
 
                 // per ogni item salvo la relativa posizione
-                for (var i = 0; i < dbxFiles.length; i++) {
-                    dbxFiles[i].sortIdx = i;
-                }
+                //for (var i = 0; i < dbxFiles.length; i++) {
+                //    dbxFiles[i].sortIdx = i;
+                //}
 
                 renderFileList();
                 toggleHint();
